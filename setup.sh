@@ -3,9 +3,9 @@
 if [ ! -f "~/.zshrc" ]; then
   mv ~/.zshrc ~/.zshrc.old
 fi
-ln -s .zshrc ~/.zshrc
+ln -s $(pwd)/.zshrc ~/.zshrc
 
 if [ ! -f "~/.config/starship.toml" ]; then
   mv ~/.config/starship.toml ~/.config/starship.toml.old
 fi
-ln -s .config/starship.toml ~/.config/starship.toml
+ln -s $(pwd)/.config/starship.toml ~/.config/starship.toml
