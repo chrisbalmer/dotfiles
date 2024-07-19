@@ -10,7 +10,7 @@ plugins=(
   kube-ps1
 )
 
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
 unsetopt inc_append_history
 unsetopt share_history
 export GOPATH=/Users/chrisbalmer/code/
@@ -44,6 +44,10 @@ autoload -U +X bashcompinit && bashcompinit
 #complete -o nospace -C /usr/local/bin/mc mc
 
 #Auto complete for kubectl
-source <(kubectl completion zsh)
+if command -v kubectl &> /dev/null
+then
+    source <(kubectl completion zsh)
+fi
+
 complete -o nospace -C /usr/local/bin/mc mc
 eval "$(starship init zsh)"
