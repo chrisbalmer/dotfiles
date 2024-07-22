@@ -40,6 +40,9 @@ function clear_cache() {
     sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
 }
 
+autoload -Uz compinit
+compinit
+
 autoload -U +X bashcompinit && bashcompinit
 #complete -o nospace -C /usr/local/bin/mc mc
 
