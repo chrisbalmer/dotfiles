@@ -1,6 +1,6 @@
 export KUBECONFIG=~/.kube/config:~/.kube/bootstrap.conf:~/.kube/xsoar8.conf
 export ZSH_DISABLE_COMPFIX=true
-export ZSH="/Users/$(whoami)/.oh-my-zsh"
+export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="af-magic"
 
 plugins=(
@@ -13,7 +13,7 @@ plugins=(
 #source $ZSH/oh-my-zsh.sh
 unsetopt inc_append_history
 unsetopt share_history
-export GOPATH=/Users/chrisbalmer/code/
+export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 export GO111MODULE=auto
 export TERRAGRUNT_PARALLELISM=1
