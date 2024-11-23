@@ -14,8 +14,7 @@ plugins=(
 unsetopt inc_append_history
 unsetopt share_history
 export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-export GO111MODULE=auto
+export PATH=$PATH:$GOPATH/bin:/opt/homebrew/bin
 export TERRAGRUNT_PARALLELISM=1
 
 alias k=kubectl
