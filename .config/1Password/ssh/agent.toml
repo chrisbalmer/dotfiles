@@ -1,0 +1,8 @@
+# https://developer.1password.com/docs/ssh/agent/config
+[[ssh-keys]]
+item = "primary ed25519"
+vault = "Private"
+
+[[ssh-keys]]
+item = "Legacy"
+vault = "Private"

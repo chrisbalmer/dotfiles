@@ -17,6 +17,12 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin:/opt/homebrew/bin
 export TERRAGRUNT_PARALLELISM=1
 
+# SSH Agent for 1Password and MacOS
+AGENT="$HOME/.1password/agent.sock"
+if [ -S $AGENT ]; then
+    export SSH_AUTH_SOCK=$AGENT
+fi
+
 alias k=kubectl
 alias ds="docker run --rm -i -t --entrypoint=/bin/bash"  
 alias dssh="docker run --rm -i -t --entrypoint=/bin/sh"
@@ -37,6 +43,11 @@ function dsshh() {
 
 function clear_cache() {
     sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+}
+
+function xsoar_env() {
+    export DEMISTO_BASE_URL=$(op read op://private/$1/hostname)
+    export DEMISTO_API_KEY=$(op read op://private/$1/credential)
 }
 
 autoload -Uz compinit
