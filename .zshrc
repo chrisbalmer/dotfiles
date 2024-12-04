@@ -45,9 +45,15 @@ function clear_cache() {
     sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
 }
 
-function xsoar_env() {
+function cortex_env() {
     export DEMISTO_BASE_URL=$(op read op://private/$1/hostname)
     export DEMISTO_API_KEY=$(op read op://private/$1/credential)
+    TEMP_AUTH_ID=$(op read op://private/$1/username)
+    if [ -z "${TEMP_AUTH_ID}" ]; then
+        unset XSIAM_AUTH_ID
+    else
+        export XSIAM_AUTH_ID=$TEMP_AUTH_ID
+    fi
 }
 
 autoload -Uz compinit
