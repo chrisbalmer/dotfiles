@@ -21,6 +21,11 @@ if [[ $CORE_OS == "MacOS" ]]; then
     fi
 fi
 
+# Set 1Password account for terraform provider
+if command -v op 2>&1 >/dev/null; then
+    export OP_ACCOUNT=$(op account ls | sed -n 2p | awk '{ print $3}')
+fi
+
 plugins=(
   git
   terraform
@@ -41,16 +46,19 @@ alias ss='eval "$(starship init zsh)"'
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="af-magic"
 
+# Docker bash shell here using specified image
 function dsh() {  
     dirname=${PWD##*/}
     docker run --rm -it --entrypoint=/bin/bash -v `pwd`:/${dirname} -w /${dirname} "$@"
 }
 
+# Docker sh shell here using specified image
 function dsshh() {  
     dirname=${PWD##*/}
     docker run --rm -it --entrypoint=/bin/sh -v `pwd`:/${dirname} -w /${dirname} "$@"
 }
 
+# Clear DNS cache for MacOS
 function clear_cache() {
     if [[ $CORE_OS == "MacOS" ]]; then
         sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
@@ -66,10 +74,10 @@ function cortex_env() {
     TEMP_AUTH_ID=$(op read op://private/$1/username)
     if [ -z "${TEMP_AUTH_ID}" ]; then
         unset XSIAM_AUTH_ID
-        echo "Loaded $1 environment for XSOAR."
+        echo "Loaded $1 environment for XSOAR 6."
     else
         export XSIAM_AUTH_ID=$TEMP_AUTH_ID
-        echo "Loaded $1 environment for XSIAM."
+        echo "Loaded $1 environment for XSIAM or XSOAR 8."
     fi
 }
 
