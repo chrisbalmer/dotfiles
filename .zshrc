@@ -9,6 +9,7 @@ unsetopt inc_append_history
 unsetopt share_history
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin:/opt/homebrew/bin:$HOME/.local/bin
+export FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
 export TERRAGRUNT_PARALLELISM=1
 export KUBECONFIG=~/.kube/config:~/.kube/bootstrap.conf:~/.kube/xsoar8.conf
 export ZSH_DISABLE_COMPFIX=true
@@ -80,9 +81,9 @@ function clear_cache() {
 }
 
 function cortex_env() {
-    export DEMISTO_BASE_URL=$(op read op://private/$1/hostname)
-    export DEMISTO_API_KEY=$(op read op://private/$1/credential)
-    TEMP_AUTH_ID=$(op read op://private/$1/username)
+    export DEMISTO_BASE_URL=$(op read op://homelab/$1/hostname)
+    export DEMISTO_API_KEY=$(op read op://homelab/$1/credential)
+    TEMP_AUTH_ID=$(op read op://homelab/$1/username)
     if [ -z "${TEMP_AUTH_ID}" ]; then
         unset XSIAM_AUTH_ID
         echo "Loaded $1 environment for XSOAR 6."
@@ -102,7 +103,7 @@ function coder_cloudflared_setup() {
 autoload -Uz compinit
 compinit
 
-autoload -U +X bashcompinit && bashcompinit
+#autoload -U +X bashcompinit && bashcompinit
 #complete -o nospace -C /usr/local/bin/mc mc
 
 #Auto complete for kubectl
@@ -111,7 +112,6 @@ then
     source <(kubectl completion zsh)
 fi
 
-complete -o nospace -C /usr/local/bin/mc mc
 eval "$(starship init zsh)"
 
 # Added by LM Studio CLI (lms)
