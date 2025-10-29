@@ -8,7 +8,7 @@ esac
 unsetopt inc_append_history
 unsetopt share_history
 export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin:/opt/homebrew/bin:$HOME/.local/bin
+export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH:$GOPATH/bin:/opt/homebrew/bin:$HOME/.local/bin
 export FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
 export TERRAGRUNT_PARALLELISM=1
 export KUBECONFIG=~/.kube/config:~/.kube/bootstrap.conf:~/.kube/xsoar8.conf
