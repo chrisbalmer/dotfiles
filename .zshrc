@@ -33,8 +33,8 @@ fi
 # Set 1Password account for terraform provider
 if command -v op 2>&1 >/dev/null; then
     export OP_ACCOUNT=$(op account ls | sed -n 2p | awk '{ print $3}')
-    chmod 0700 ~/.config/op/
-    chmod 0600 ~/.config/op/config
+    [ -d $HOME/.config/op ] && chmod 0700 $HOME/.config/op/
+    [ -f $HOME/.config/op/config ] && chmod 0600 $HOME/.config/op/config
 fi
 
 # Aliases
@@ -111,3 +111,8 @@ fi
 eval "$(starship init zsh)"
 
 export PATH="$PATH:$HOME/.lmstudio/bin"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/chrisbalmer/.lmstudio/bin"
+# End of LM Studio CLI section
+
