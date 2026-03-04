@@ -5,15 +5,22 @@ case "${SYSINFO}" in
     *)          export CORE_OS="UNKNOWN:${SYSINFO}"
 esac
 
-unsetopt inc_append_history
-unsetopt share_history
+# History configuration
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
 export GOPATH=$HOME/go
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH:$GOPATH/bin:/opt/homebrew/bin:$HOME/.local/bin
 export FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
 export TERRAGRUNT_PARALLELISM=1
 export KUBECONFIG=~/.kube/config:~/.kube/bootstrap.conf:~/.kube/xsoar8.conf
-export ZSH_DISABLE_COMPFIX=true
 export TERRAGRUNT_PROVIDER_CACHE=1
+export GOPRIVATE=gitea.labgophers.com
 
 # SSH Agent for 1Password and MacOS
 if [[ $CORE_OS == "MacOS" ]]; then
@@ -30,13 +37,6 @@ if command -v op 2>&1 >/dev/null; then
     chmod 0600 ~/.config/op/config
 fi
 
-plugins=(
-  git
-  terraform
-  ansible
-  kube-ps1
-)
-
 # Aliases
 alias k=kubectl
 alias kn="kubectl config set-context --current --namespace="
@@ -51,12 +51,6 @@ alias dssh="docker run --rm -i -t --entrypoint=/bin/sh"
 alias xs=demisto-sdk
 alias shpod="k attach -n shpod -ti shpod"
 alias tc="talosctl"
-
-# Legacy items to remove
-alias ztheme='(){ export ZSH_THEME="$@" && source $ZSH/oh-my-zsh.sh }'
-alias ss='eval "$(starship init zsh)"'
-export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="af-magic"
 
 # Docker bash shell here using specified image
 function dsh() {  
@@ -93,6 +87,10 @@ function cortex_env() {
     fi
 }
 
+function ghcr_login() {
+    op read "op://Private/$(hostname) docker auth GitHub/token" | docker login ghcr.io -u $(op read "op://Private/$(hostname) docker auth GitHub/username") --password-stdin
+}
+
 function coder_cloudflared_setup() {
     cloudflared access login https://coder.labgophers.com
     export CODER_HEADER=cf-access-token=$(cloudflared access token -app=http://coder.labgophers.com)
@@ -100,13 +98,11 @@ function coder_cloudflared_setup() {
     coder config-ssh
 }
 
+# Completions
+fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 
-#autoload -U +X bashcompinit && bashcompinit
-#complete -o nospace -C /usr/local/bin/mc mc
-
-#Auto complete for kubectl
 if command -v kubectl &> /dev/null
 then
     source <(kubectl completion zsh)
@@ -114,5 +110,4 @@ fi
 
 eval "$(starship init zsh)"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/chrisbalmer/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
