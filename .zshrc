@@ -32,9 +32,9 @@ fi
 
 # Set 1Password account for terraform provider
 if command -v op 2>&1 >/dev/null; then
-    export OP_ACCOUNT=$(op account ls | sed -n 2p | awk '{ print $3}')
     [ -d $HOME/.config/op ] && chmod 0700 $HOME/.config/op/
     [ -f $HOME/.config/op/config ] && chmod 0600 $HOME/.config/op/config
+    export OP_ACCOUNT=$(op account ls | sed -n 2p | awk '{ print $3}')
 fi
 
 # Aliases
