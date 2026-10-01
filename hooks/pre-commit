@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Refuse a commit that would publish machine-specific values in this public repo.
+# Installers that append to ~/.zshrc (a link into this repo) are the usual way in.
+#
+# Blocks, in the staged lines and in the commit's author identity:
+#   - macOS home paths (/Users/<name>) and *.local hostnames or addresses
+#   - every value exported in ~/.zshrc.local (comma-separated lists are split)
+#   - every line of ~/.config/dotfiles/denylist (optional; # starts a comment)
+# Neither list is in the repo, so the strings being protected stay private.
+set -euo pipefail
+
+generic='/Users/[A-Za-z]|[A-Za-z0-9-]\.local([^A-Za-z0-9]|$)'
+
+values=()
+if [ -f "$HOME/.zshrc.local" ]; then
+  while IFS= read -r v; do
+    [ -n "$v" ] && values+=("$v")
+  done < <(sed -nE 's/^[[:space:]]*export[[:space:]]+[A-Za-z_][A-Za-z0-9_]*=//p' "$HOME/.zshrc.local" \
+             | sed -E "s/^\"(.*)\"$/\1/; s/^'(.*)'$/\1/" | tr ',' '\n')
+fi
+if [ -f "$HOME/.config/dotfiles/denylist" ]; then
+  while IFS= read -r v; do
+    case "$v" in ''|'#'*) ;; *) values+=("$v") ;; esac
+  done < "$HOME/.config/dotfiles/denylist"
+fi
+
+added=$(git diff --cached -U0 --no-color | grep -E '^\+' | grep -vE '^\+\+\+ ' || true)
+author=$(git var GIT_AUTHOR_IDENT)
+
+fail=0
+for text in "$added" "$author"; do
+  # zshrc.local is this repo's own file name, not a host
+  if sed 's/zshrc\.local//g' <<<"$text" | grep -qE "$generic"; then
+    echo "pre-commit: a /Users/ path or a .local name would be published:" >&2
+    sed 's/zshrc\.local//g' <<<"$text" | grep -E "$generic" | sed 's/^/  /' >&2
+    fail=1
+  fi
+  for v in ${values[@]+"${values[@]}"}; do
+    if grep -qF -- "$v" <<<"$text"; then
+      echo "pre-commit: a value from ~/.zshrc.local or the denylist would be published:" >&2
+      grep -F -- "$v" <<<"$text" | sed 's/^/  /' >&2
+      fail=1
+    fi
+  done
+done
+
+if [ "$fail" -ne 0 ]; then
+  echo "pre-commit: move it to ~/.zshrc.local, or commit with --no-verify if it's meant to be public." >&2
+fi
+exit "$fail"
