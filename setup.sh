@@ -19,6 +19,7 @@ link() {
 link .zshrc "$HOME/.zshrc"
 link .config/starship.toml "$HOME/.config/starship.toml"
 link .config/git/config "$HOME/.config/git/config"
+link .config/herdr/config.toml "$HOME/.config/herdr/config.toml"
 
 # Refuse commits that would publish machine-specific values (hooks/pre-commit)
 if [ -d "$SCRIPT_DIR/.git" ]; then
