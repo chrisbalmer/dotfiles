@@ -3,6 +3,10 @@
 # setup.sh. herdr keeps its session state and logs next to this file, not in
 # it.
 
+# The first-run notification setup. Missing means show it, so without this
+# every new workspace would.
+onboarding = false
+
 [update]
 # Off: herdr's version is managed elsewhere. Coder workspaces pin it in the
 # template, and a Mac updates it with brew.
