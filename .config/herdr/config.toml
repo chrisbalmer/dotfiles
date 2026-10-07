@@ -1,0 +1,9 @@
+# herdr (https://herdr.dev). Only overrides; `herdr --default-config` prints
+# every setting with its default. Linked to ~/.config/herdr/config.toml by
+# setup.sh. herdr keeps its session state and logs next to this file, not in
+# it.
+
+[update]
+# Off: herdr's version is managed elsewhere. Coder workspaces pin it in the
+# template, and a Mac updates it with brew.
+version_check = false

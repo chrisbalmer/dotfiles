@@ -1,6 +1,6 @@
 # dotfiles
 
-zsh, starship, git and 1Password SSH agent configuration for macOS, and for
+zsh, starship, git, [herdr](https://herdr.dev) and 1Password SSH agent configuration for macOS, and for
 [Coder](https://coder.com) workspaces (Linux).
 
 ## Install
